@@ -76,7 +76,9 @@ open class Element: NSObject {
 		self.attachedSheets = []
 		self.onAppearObserver = nil
 		self.receiveThemeNotifications = false
-		self.isHiddenBinder?.deregister(self)
+
+		self.bindings.deregisterAll()
+
 		Logger.Debug("Element [\(type(of: self))] deinit")
 	}
 
@@ -91,7 +93,9 @@ open class Element: NSObject {
 
 	// MARK: Binding
 
-	private var isHiddenBinder: ValueBinder<Bool>?
+//	internal var isHiddenBinder: ValueBinder<Bool>?
+//	internal var widthConstraintBinder: ValueBinder<Double>?
+//	internal var heightConstraintBinder: ValueBinder<Double>?
 
 	// CGColor convertibles
 	private var _backgroundColor: NSColor?
@@ -104,6 +108,9 @@ open class Element: NSObject {
 	internal var attachedSheets: [DSFAppKitBuilderAssignableViewController] = []
 
 	internal var attachedObjects: [AnyObject] = []
+
+	// General bindings to be removed when the view is removed
+	internal let bindings = BindingsBag()
 }
 
 // MARK: - Dark mode handling
@@ -293,15 +300,27 @@ public extension Element {
 		Group(edgeInsets: value) { self }
 	}
 
+	/// Apply padding to the element by wrapping it in a Group
+	/// - Parameters:
+	///   - top: top padding
+	///   - leading: leading padding
+	///   - bottom: bottom padding
+	///   - trailing: trailing padding
+	/// - Returns: A new group
+	func padding(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) -> Group {
+		Group(edgeInsets: NSEdgeInsets(top: top, left: leading, bottom: bottom, right: trailing)) { self }
+	}
+}
+
+// MARK: - Visual effect wrapping
+
+public extension Element {
 	/// Wrap the current element in a VisualEffectView
 	/// - Parameters:
 	///   - effect: The effect to apply to the wrapper view
 	///   - padding: The edge inset to apply for child elements
 	/// - Returns: VisualEffectView
-	func visualEffect(
-		_ effect: VisualEffect,
-		padding: CGFloat? = nil
-	) -> VisualEffectView {
+	func visualEffect(_ effect: VisualEffect, padding: CGFloat? = nil) -> VisualEffectView {
 		VisualEffectView(effect: effect, padding: padding) { self }
 	}
 }
@@ -323,10 +342,10 @@ public extension Element {
 	/// Binding for showing or hiding the element
 	@discardableResult
 	func bindIsHidden(_ isHiddenBinder: ValueBinder<Bool>) -> Self {
-		self.isHiddenBinder = isHiddenBinder
-		isHiddenBinder.register { [weak self] newValue in
+		isHiddenBinder.register(self) { [weak self] newValue in
 			self?.view().isHidden = newValue
 		}
+		self.bindings.append(self, isHiddenBinder)
 		return self
 	}
 

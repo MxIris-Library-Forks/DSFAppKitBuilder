@@ -33,6 +33,7 @@ public class ViewItems {
 		DatePickerBuilder(),
 		ButtonBuilder(),
 		GridBuilder(),
+		FormBuilder(),
 		OneOfBuilder(),
 		ToggleBuilder(),
 		ColorWellBuilder(),
@@ -48,6 +49,9 @@ public class ViewItems {
 		PopoverSheetBuilder(),
 		ZoomableScrollviewBuilder(),
 		PanelStyleBuilder(),
-		ViewControllerDemoBuilder()
+		ViewControllerDemoBuilder(),
+		BindingsExampleBuilder(),
+		LevelIndicatorBuilder(),
+		PagerBuilder()
 	].sorted { a, b in a.title < b.title }
 }

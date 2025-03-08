@@ -33,7 +33,7 @@ class CheckboxBuilderController: ElementController {
 				self.radioBody
 					.padding(4)
 			}
-			.showDebugFrames()
+			//.showDebugFrames()
 		}
 		.hugging(h: 10)
 	}()
@@ -68,7 +68,7 @@ class CheckboxBuilderController: ElementController {
 			HStack {
 				CheckBox(NSLocalizedString("This is the first checkbox", comment: ""), allowMixedState: true)
 					.bindState(__state1)
-				EmptyView()
+				DSFAppKitBuilder.EmptyView()
 				Button(title: NSLocalizedString("Toggle", comment: ""), bezelStyle: .roundRect) { [weak self] _ in
 					guard let `self` = self else { return }
 					let current = self.__state1.wrappedValue

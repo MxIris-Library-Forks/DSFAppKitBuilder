@@ -61,7 +61,7 @@ class PopoverSheetBuilderController: ElementController {
 
 		self.secondWindow.bindTitle(self.presentedWindowTitle)
 		self.secondWindow.bindMinimise(self.presentedWindowMinimised)
-		self.secondWindow.onOpen { [weak self] window in
+		self.secondWindow.onOpen { window in // [weak self] window in
 			Swift.print("MyWindow: onOpen")
 		}
 		self.secondWindow.onClose { _ in
@@ -188,7 +188,7 @@ class PopoverSheetBuilderController: ElementController {
 				.horizontalHuggingPriority(.defaultLow)
 			}
 
-			EmptyView()
+			DSFAppKitBuilder.EmptyView()
 		}
 		.hugging(h: 10)
 	}()
@@ -229,7 +229,7 @@ class MyWindow: ManagedWindow {
 					.label("New")
 					.isSelectable(true)
 					.image(NSImage(named: "slider-rabbit")!)
-					.shouldEnable { [weak self] in
+					.willEnable { [weak self] in
 						false
 					}
 					.action { [weak self] _ in
@@ -334,7 +334,7 @@ class MySheet: SheetDefinition {
 					Label("Do something?")
 				}
 				HStack {
-					EmptyView()
+					DSFAppKitBuilder.EmptyView()
 					HStack(alignment: .trailing, distribution: .fillEqually) {
 						Button(title: "OK", bezelStyle: .rounded) { [weak self] _ in
 							self?.dismiss()
